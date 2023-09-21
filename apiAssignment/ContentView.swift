@@ -2,87 +2,77 @@
 //  ContentView.swift
 //  apiAssignment
 //
-//  Created by Ananya Tandel on 9/21/23.
+//  Created by Ananya Tandel on 9/18/23.
 //
 
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+import SwiftUI
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+// api source/url: https://jokeapi.dev/
 
+// show the Joke data from the API
+struct Joke: Codable, Identifiable {
+    var id: Int
+    var category: String
+    var type: String
+    var joke: String
+}
+
+// create the main view for displaying a list of jokes
+struct JokesView: View {
+    @State var jokes = [Joke]() // state property to store the fetched jokes
+    
+    // fetch jokes from the JokeAPI
+    func getAllJokes() async -> () {
+        do {
+            let url = URL(string: "https://v2.jokeapi.dev/joke/Any")!
+            let (data, _) = try await URLSession.shared.data(from: url) // fetch data
+            
+            // json response into an array of Jokes
+            jokes = try JSONDecoder().decode([Joke].self, from: data)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            List(jokes) { joke in
+                // navigate to the JokeDetailView
+                NavigationLink(destination: JokeDetailView(joke: joke)) {
+                    VStack(alignment: .leading) {
+                        Text(joke.category)
+                        Text(joke.joke)
                     }
                 }
             }
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            .task {
+                await getAllJokes() // display jokes when the view appears
             }
         }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+        .navigationTitle("Jokes") // title
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
+// detail view for displaying an individual joke
+struct JokeDetailView: View {
+    let joke: Joke // display joke
+    
+    var body: some View {
+        VStack {
+            Text(joke.category)
+                .font(.headline)
+            Text(joke.joke)
+                .padding()
+        }
+        .navigationTitle("Joke Detail") // detail view title
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        JokesView() // preview screen
     }
 }

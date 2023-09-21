@@ -13,7 +13,7 @@ struct apiAssignmentApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            JokesView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
