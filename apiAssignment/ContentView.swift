@@ -36,6 +36,8 @@ struct Flags: Codable {
     var explicit: Bool
 }
 
+
+
 // main view
 struct JokesView: View {
     @State var jokes = [Joke]()
@@ -60,8 +62,9 @@ struct JokesView: View {
                 NavigationLink(destination: JokeDetailView(joke: joke)) {
                     VStack(alignment: .leading) {
                         Text(joke.category)
+                            .bold()
                         Text(joke.setup ?? "") // display setup
-                        Text(joke.delivery ?? "") // display delivery
+                        // Text(joke.delivery ?? "") // display delivery
                     }
                 }
             }
@@ -70,10 +73,13 @@ struct JokesView: View {
                     await getAllJokes() // fetch jokes when the view appears
                 }
             }
-            .navigationTitle("Jokes")
+            .navigationTitle("Click to Reveal Joke")
         }
     }
 }
+
+
+
 
 // detail view to display individual joke
 struct JokeDetailView: View {
@@ -84,12 +90,17 @@ struct JokeDetailView: View {
             Text(joke.category)
                 .font(.headline)
             Text(joke.setup ?? "") // display setup
+                .padding()
+                .multilineTextAlignment(.center)
             Text(joke.delivery ?? "") // display delivery
                 .padding()
+                .multilineTextAlignment(.center)
         }
         .navigationTitle("Joke Detail View")
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
