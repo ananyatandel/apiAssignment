@@ -7,26 +7,26 @@
 
 import SwiftUI
 
+// represent the JSON response containing jokes
+struct JokeResponse: Codable {
+    var error: Bool
+    var amount: Int
+    var jokes: [Joke]
+}
+
+// represent an individual joke
 struct Joke: Codable, Identifiable {
     var id: Int
     var category: String
     var type: String
-    var joke: String
+    var setup: String?
+    var delivery: String?
     var flags: Flags
     var safe: Bool
     var lang: String
-    
-//    enum CodingKeys: String, CodingKey {
-//            case id = "id"
-//            case category
-//            case type
-//            case joke
-//            case flags
-//            case safe
-//            case lang
-//        }
 }
 
+// represent flags associated with a joke
 struct Flags: Codable {
     var nsfw: Bool
     var religious: Bool
@@ -36,53 +36,58 @@ struct Flags: Codable {
     var explicit: Bool
 }
 
+// main view
 struct JokesView: View {
-    @State var joke: Joke?  // Store a single joke
+    @State var jokes = [Joke]()
 
-    // fetch a joke from API
-    func getJoke() async {
+    // fetch jokes async from API
+    func getAllJokes() async {
         do {
-            // define url
             let url = URL(string: "https://v2.jokeapi.dev/joke/Any?amount=20")!
-            // fetch data from url
             let (data, _) = try await URLSession.shared.data(from: url)
-
-            // decode the response into a single Joke object
-            joke = try JSONDecoder().decode(Joke.self, from: data)
+            
+            // decode the received JSON data into JokeResponse
+            let decodedData = try JSONDecoder().decode(JokeResponse.self, from: data)
+            jokes = decodedData.jokes
         } catch {
-            // error message
             print(error)
         }
     }
 
     var body: some View {
         NavigationView {
-            if let joke = joke {
-                JokeDetailView(joke: joke)
-            } else {
-                Text("Loading...")  // show a loading message
-                    .onAppear {
-                        Task {
-                            await getJoke()
-                        }
+            List(jokes) { joke in
+                NavigationLink(destination: JokeDetailView(joke: joke)) {
+                    VStack(alignment: .leading) {
+                        Text(joke.category)
+                        Text(joke.setup ?? "") // display setup
+                        Text(joke.delivery ?? "") // display delivery
                     }
+                }
             }
+            .onAppear {
+                Task {
+                    await getAllJokes() // fetch jokes when the view appears
+                }
+            }
+            .navigationTitle("Jokes")
         }
-        .navigationTitle("Jokes") // nav title
     }
 }
 
+// detail view to display individual joke
 struct JokeDetailView: View {
-    let joke: Joke // display in detail view
+    let joke: Joke
 
     var body: some View {
         VStack {
             Text(joke.category)
                 .font(.headline)
-            Text(joke.joke)
+            Text(joke.setup ?? "") // display setup
+            Text(joke.delivery ?? "") // display delivery
                 .padding()
         }
-        .navigationTitle("Joke Detail View") // detail view title
+        .navigationTitle("Joke Detail View")
     }
 }
 
@@ -91,4 +96,3 @@ struct ContentView_Previews: PreviewProvider {
         JokesView()
     }
 }
-
