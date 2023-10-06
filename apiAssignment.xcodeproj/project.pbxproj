@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A5C297E2AD0992F00EF862B /* JokesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5C297D2AD0992F00EF862B /* JokesViewModel.swift */; };
 		9A8CD5F82ABCCD5A00336632 /* apiAssignmentApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8CD5F72ABCCD5A00336632 /* apiAssignmentApp.swift */; };
 		9A8CD5FA2ABCCD5A00336632 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8CD5F92ABCCD5A00336632 /* ContentView.swift */; };
 		9A8CD5FC2ABCCD5E00336632 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A8CD5FB2ABCCD5E00336632 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9A5C297D2AD0992F00EF862B /* JokesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JokesViewModel.swift; sourceTree = "<group>"; };
 		9A8CD5F42ABCCD5A00336632 /* apiAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = apiAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A8CD5F72ABCCD5A00336632 /* apiAssignmentApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiAssignmentApp.swift; sourceTree = "<group>"; };
 		9A8CD5F92ABCCD5A00336632 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -37,10 +39,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A5C297A2AD0983200EF862B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9A5C297B2AD0984F00EF862B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9A5C297C2AD0985F00EF862B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9A5C297D2AD0992F00EF862B /* JokesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		9A8CD5EB2ABCCD5900336632 = {
 			isa = PBXGroup;
 			children = (
 				9A8CD5F62ABCCD5A00336632 /* apiAssignment */,
+				9A5C297C2AD0985F00EF862B /* ViewModels */,
+				9A5C297B2AD0984F00EF862B /* Models */,
+				9A5C297A2AD0983200EF862B /* Views */,
 				9A8CD5F52ABCCD5A00336632 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -149,6 +176,7 @@
 				9A8CD6042ABCCD5E00336632 /* apiAssignment.xcdatamodeld in Sources */,
 				9A8CD5FA2ABCCD5A00336632 /* ContentView.swift in Sources */,
 				9A8CD5F82ABCCD5A00336632 /* apiAssignmentApp.swift in Sources */,
+				9A5C297E2AD0992F00EF862B /* JokesViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

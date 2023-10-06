@@ -40,9 +40,10 @@ struct Flags: Codable {
 struct JokesView: View {
     @State var jokes = [Joke]()
     @State private var favoriteJokes = [Joke]() // store favorite jokes here
+    @ObservedObject var viewModel = JokesViewModel()
 
     // fetch jokes async from API
-    func getAllJokes() async {
+    func fetchAllJokes() async {
         do {
             let url = URL(string: "https://v2.jokeapi.dev/joke/Any?amount=20")!
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -69,7 +70,7 @@ struct JokesView: View {
             }
             .onAppear {
                 Task {
-                    await getAllJokes() // fetch jokes when the view appears
+                    await fetchAllJokes() // fetch jokes when the view appears
                 }
             }
             .navigationTitle("Click to Reveal Joke")
